@@ -51,6 +51,12 @@ public class DefaultQueryTransformer implements IQueryTransformer {
             .compile(S0 + "SUM" + S0 + "\\(" + S0 + "\\{\\s*fn" + SM + "convert" + S0 + "\\(" + S0 + "([^\\s,]+)" + S0
                     + "," + S0 + "SQL_DOUBLE" + S0 + "\\)" + S0 + "\\}" + S0 + "\\)", Pattern.CASE_INSENSITIVE);
 
+    // add by temple.zhou for Tableau 2018.1
+    private static final Pattern PTN_HAVING_CURRENT_TIMESTAMP_FUNCTION = Pattern.compile(S0 + "\\{fn CURRENT_TIMESTAMP\\(0\\)}" + S0,
+            Pattern.CASE_INSENSITIVE);
+    private static final Pattern PTN_SUM_CONVERT_1 = Pattern.compile(S0 + "SUM\\(\\{fn CONVERT\\(1," + S0 + ".*?\\)}\\)" + S0,
+            Pattern.CASE_INSENSITIVE);
+
     @Override
     public String transform(String sql, String project, String defaultSchema) {
         Matcher m;
@@ -101,6 +107,24 @@ public class DefaultQueryTransformer implements IQueryTransformer {
             if (!m.find())
                 break;
             sql = sql.substring(0, m.start()) + " COUNT(1) " + sql.substring(m.end());
+        }
+
+        // Case: SUM({fn CONVERT(1, xxx)})
+        // Replace it with COUNT(1)
+        while (true) {
+            m = PTN_SUM_CONVERT_1.matcher(sql);
+            if (!m.find())
+                break;
+            sql = sql.substring(0, m.start()) + " COUNT(1) " + sql.substring(m.end());
+        }
+
+        // Case: {fn CURRENT_TIMESTAMP(0)}
+        // Replace it with CURRENT_TIMESTAMP(0)
+        while (true) {
+            m = PTN_HAVING_CURRENT_TIMESTAMP_FUNCTION.matcher(sql);
+            if (!m.find())
+                break;
+            sql = sql.substring(0, m.start()) + " CURRENT_TIMESTAMP(0) " + sql.substring(m.end());
         }
 
         // Case: MIN(1) or MAX(1)
