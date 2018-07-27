@@ -81,6 +81,15 @@ public class DefaultQueryTransformer implements IQueryTransformer {
                     + sql.substring(m.end(), sql.length());
         }
 
+        // Case: {fn CURRENT_TIMESTAMP(0)}
+        // Replace it with CURRENT_TIMESTAMP(0)
+        while (true) {
+            m = PTN_HAVING_CURRENT_TIMESTAMP_FUNCTION.matcher(sql);
+            if (!m.find())
+                break;
+            sql = sql.substring(0, m.start()) + " CURRENT_TIMESTAMP(0) " + sql.substring(m.end());
+        }
+
         // Case {fn EXTRACT(...) }
         // Use non-greedy regex matching to remove escape functions
         // Notice: Only unsupported escape function need to be handled
@@ -116,15 +125,6 @@ public class DefaultQueryTransformer implements IQueryTransformer {
             if (!m.find())
                 break;
             sql = sql.substring(0, m.start()) + " COUNT(1) " + sql.substring(m.end());
-        }
-
-        // Case: {fn CURRENT_TIMESTAMP(0)}
-        // Replace it with CURRENT_TIMESTAMP(0)
-        while (true) {
-            m = PTN_HAVING_CURRENT_TIMESTAMP_FUNCTION.matcher(sql);
-            if (!m.find())
-                break;
-            sql = sql.substring(0, m.start()) + " CURRENT_TIMESTAMP(0) " + sql.substring(m.end());
         }
 
         // Case: MIN(1) or MAX(1)
