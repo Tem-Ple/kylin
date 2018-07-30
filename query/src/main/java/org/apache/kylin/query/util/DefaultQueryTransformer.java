@@ -52,9 +52,10 @@ public class DefaultQueryTransformer implements IQueryTransformer {
                     + "," + S0 + "SQL_DOUBLE" + S0 + "\\)" + S0 + "\\}" + S0 + "\\)", Pattern.CASE_INSENSITIVE);
 
     // add by temple.zhou for Tableau 2018.1
-    private static final Pattern PTN_HAVING_CURRENT_TIMESTAMP_FUNCTION = Pattern.compile(S0 + "\\{fn CURRENT_TIMESTAMP\\(0\\)}" + S0,
+    private static final Pattern PTN_HAVING_CURRENT_TIMESTAMP_FUNCTION = Pattern.compile(S0 + "\\{\\s*fn" + SM + "CURRENT_TIMESTAMP"+S0+"\\("+S0+"0"+S0+"\\)"+S0+"\\}" + S0,
             Pattern.CASE_INSENSITIVE);
-    private static final Pattern PTN_SUM_CONVERT_1 = Pattern.compile(S0 + "SUM\\(\\{fn CONVERT\\(1," + S0 + ".*?\\)}\\)" + S0,
+    private static final Pattern PTN_SUM_CONVERT_1 = Pattern.compile(S0 + "SUM" + S0 +"\\(" + S0 + "\\{\\s*fn" + SM
+                    + "CONVERT" + S0 + "\\(" + S0 + "1" + S0 + "," + S0 + ".*?" + "\\)" + S0 + "\\}" + S0 + "\\)",
             Pattern.CASE_INSENSITIVE);
 
     @Override
