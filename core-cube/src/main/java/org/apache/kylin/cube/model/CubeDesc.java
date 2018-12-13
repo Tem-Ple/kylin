@@ -131,7 +131,7 @@ public class CubeDesc extends RootPersistentEntity implements IEngineAware {
         }
 
     }
-    
+
     // ============================================================================
 
     private KylinConfigExt config;
@@ -222,7 +222,7 @@ public class CubeDesc extends RootPersistentEntity implements IEngineAware {
     public String resourceName() {
         return name;
     }
-    
+
     public boolean isEnableSharding() {
         //in the future may extend to other storage that is shard-able
         return storageType != IStorageAware.ID_HBASE && storageType != IStorageAware.ID_HYBRID;
@@ -1193,7 +1193,7 @@ public class CubeDesc extends RootPersistentEntity implements IEngineAware {
     }
 
     public long getVolatileRange() {
-        return volatileRange;
+        return volatileRange == 0 ? this.config.getDefaultVolatileRange() : volatileRange;
     }
 
     public void setVolatileRange(long volatileRange) {
@@ -1215,7 +1215,7 @@ public class CubeDesc extends RootPersistentEntity implements IEngineAware {
     public void setAutoMergeTimeRanges(long[] autoMergeTimeRanges) {
         this.autoMergeTimeRanges = autoMergeTimeRanges;
     }
-    
+
     public boolean isBroken() {
         return !errors.isEmpty();
     }
@@ -1406,7 +1406,7 @@ public class CubeDesc extends RootPersistentEntity implements IEngineAware {
         }
         return desc.isExtSnapshotTable();
     }
-    
+
     public List<String> getAllExtLookupSnapshotTypes() {
         List<String> result = Lists.newArrayList();
         for (SnapshotTableDesc snapshotTableDesc : snapshotTableDescList) {
@@ -1453,7 +1453,7 @@ public class CubeDesc extends RootPersistentEntity implements IEngineAware {
         }
         return null;
     }
-    
+
     public List<TblColRef> getAllGlobalDictColumns() {
         List<TblColRef> globalDictCols = new ArrayList<TblColRef>();
         List<DictionaryDesc> dictionaryDescList = getDictionaries();
@@ -1469,7 +1469,7 @@ public class CubeDesc extends RootPersistentEntity implements IEngineAware {
         }
         return globalDictCols;
     }
-    
+
     // UHC (ultra high cardinality column): contain the ShardByColumns and the GlobalDictionaryColumns
     public List<TblColRef> getAllUHCColumns() {
         List<TblColRef> uhcColumns = new ArrayList<TblColRef>();
