@@ -26,6 +26,7 @@ import java.util.NavigableSet;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -92,7 +93,9 @@ public class MetadataCleanupJob {
 
         // find all of the global dictionaries in HDFS
         try {
-            FileStatus[] fStatus = fs.listStatus(new Path(KylinConfig.getInstanceFromEnv().getHdfsWorkingDirectory() + "resources/GlobalDict/dict"));
+            FileStatus[] fStatus = new FileStatus[0];
+            fStatus = ArrayUtils.addAll(fStatus, fs.listStatus(new Path(KylinConfig.getInstanceFromEnv().getHdfsWorkingDirectory() + "resources/GlobalDict/dict")));
+            fStatus = ArrayUtils.addAll(fStatus, fs.listStatus(new Path(KylinConfig.getInstanceFromEnv().getHdfsWorkingDirectory() + "resources/SegmentDict/dict")));
             for (FileStatus status : fStatus) {
                 String path = status.getPath().toString();
                 FileStatus[] globalDicts = fs.listStatus(new Path(path));
@@ -128,8 +131,15 @@ public class MetadataCleanupJob {
                 for (String dictPath : segment.getDictionaryPaths()) {
                     DictionaryInfo dictInfo = store.getResource(dictPath, DictionaryInfo.class, DictionaryInfoSerializer.FULL_SERIALIZER);
                     if ("org.apache.kylin.dict.AppendTrieDictionary".equals(dictInfo != null ? dictInfo.getDictionaryClass() : null)){
-                        activeResources.add(KylinConfig.getInstanceFromEnv().getHdfsWorkingDirectory()
-                                + "resources/GlobalDict" + dictInfo.getResourceDir());
+                        String dictObj = dictInfo.getDictionaryObject().toString();
+                        String basedir = dictObj.substring(dictObj.indexOf("(") + 1, dictObj.indexOf(")") - 1);
+                        if (basedir.startsWith(KylinConfig.getInstanceFromEnv().getHdfsWorkingDirectory() + "/resources/GlobalDict")) {
+                            activeResources.add(KylinConfig.getInstanceFromEnv().getHdfsWorkingDirectory()
+                                    + "resources/GlobalDict" + dictInfo.getResourceDir());
+                        } else if (basedir.startsWith(KylinConfig.getInstanceFromEnv().getHdfsWorkingDirectory() + "/resources/SegmentDict")) {
+                            activeResources.add(KylinConfig.getInstanceFromEnv().getHdfsWorkingDirectory()
+                                    + "resources/SegmentDict" + dictInfo.getResourceDir());
+                        }
                     }
                 }
             }
