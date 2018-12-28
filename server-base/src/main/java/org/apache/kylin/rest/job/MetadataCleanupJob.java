@@ -100,8 +100,8 @@ public class MetadataCleanupJob {
                 String path = status.getPath().toString();
                 FileStatus[] globalDicts = fs.listStatus(new Path(path));
                 for (FileStatus globalDict : globalDicts) {
-                    String GlobalDictPath = globalDict.getPath().toString();
-                    toDeleteCandidates.add(GlobalDictPath);
+                    String globalDictPath = globalDict.getPath().toString();
+                    toDeleteCandidates.add(globalDictPath);
                 }
             }
         } catch (FileNotFoundException e) {
