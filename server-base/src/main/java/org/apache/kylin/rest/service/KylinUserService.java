@@ -84,7 +84,6 @@ public class KylinUserService implements UserService {
         ManagedUser managedUser = (ManagedUser) user;
         getKylinUserManager().update(managedUser);
         logger.trace("update user : {}", user.getUsername());
-        setEvictCacheFlag(true);
     }
 
     @Override
