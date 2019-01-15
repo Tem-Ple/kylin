@@ -20,6 +20,8 @@ package org.apache.kylin.tool;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Set;
 
@@ -112,10 +114,9 @@ public class CubeMetaIngester extends AbstractApplication {
             throw new IllegalArgumentException(OPTION_SRC.getArgName() + " file does does exist");
         }
 
-        File tempFolder = File.createTempFile("_unzip", "folder");
+        Path tempPath = Files.createTempDirectory("_unzip");
+        File tempFolder = tempPath.toFile();
         tempFolder.deleteOnExit();
-        tempFolder.delete();
-        tempFolder.mkdir();
         ZipFileUtils.decompressZipfileToDirectory(srcPath, tempFolder);
         injest(tempFolder.getAbsoluteFile());
     }
