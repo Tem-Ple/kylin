@@ -117,11 +117,7 @@ public class CubeMetaIngester extends AbstractApplication {
         tempFolder.delete();
         tempFolder.mkdir();
         ZipFileUtils.decompressZipfileToDirectory(srcPath, tempFolder);
-        if (tempFolder.list().length != 1) {
-            throw new IllegalStateException(Arrays.toString(tempFolder.list()));
-        }
-
-        injest(tempFolder.listFiles()[0].getAbsoluteFile());
+        injest(tempFolder.getAbsoluteFile());
     }
 
     private void injest(File metaRoot) throws IOException {
