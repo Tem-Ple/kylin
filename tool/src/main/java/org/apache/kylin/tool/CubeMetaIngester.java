@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Set;
 
 import org.apache.commons.cli.Option;
@@ -118,7 +119,11 @@ public class CubeMetaIngester extends AbstractApplication {
         File tempFolder = tempPath.toFile();
         tempFolder.deleteOnExit();
         ZipFileUtils.decompressZipfileToDirectory(srcPath, tempFolder);
-        injest(tempFolder.getAbsoluteFile());
+        if (tempFolder.list().length != 1) {
+            throw new IllegalStateException(Arrays.toString(tempFolder.list()));
+        }
+
+        injest(tempFolder.listFiles()[0].getAbsoluteFile());
     }
 
     private void injest(File metaRoot) throws IOException {
