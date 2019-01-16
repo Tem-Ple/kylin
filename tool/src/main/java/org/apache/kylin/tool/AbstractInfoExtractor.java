@@ -29,6 +29,7 @@ import java.util.Locale;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
+import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.kylin.common.KylinConfig;
@@ -104,7 +105,7 @@ public abstract class AbstractInfoExtractor extends AbstractApplication {
         String packageName = packageType.toLowerCase(Locale.ROOT) + "_"
                 + new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.ROOT).format(new Date());
         if (!isSubmodule && new File(exportDest).exists()) {
-            exportDest = exportDest + packageName + "/";
+            exportDest = exportDest + packageName + "/" + packageName + "/";
         }
 
         exportDir = new File(exportDest);
@@ -119,10 +120,10 @@ public abstract class AbstractInfoExtractor extends AbstractApplication {
         // compress to zip package
         if (shouldCompress) {
             File tempZipFile = File.createTempFile(packageType + "_", ".zip");
-            ZipFileUtils.compressZipFile(exportDir.getAbsolutePath(), tempZipFile.getAbsolutePath());
-            FileUtils.cleanDirectory(exportDir);
+            ZipFileUtils.compressZipFile(exportDir.getParent(), tempZipFile.getAbsolutePath());
+            FileUtils.cleanDirectory(new File(exportDir.getParent()));
 
-            File zipFile = new File(exportDir, packageName + ".zip");
+            File zipFile = new File(exportDir.getParent(), packageName + ".zip");
             FileUtils.moveFile(tempZipFile, zipFile);
             exportDest = zipFile.getAbsolutePath();
             exportDir = new File(exportDest);
@@ -166,5 +167,20 @@ public abstract class AbstractInfoExtractor extends AbstractApplication {
 
     public String getExportDest() {
         return exportDir.getAbsolutePath();
+    }
+
+    public static void main(String[] args) throws IOException, ArchiveException {
+        String packageType = "base_";
+        File tempZipFile = File.createTempFile(packageType + "_", ".zip");
+        File exportDir = new File("/Users/zhoutianpeng/tmp/a/");
+        String packageName = packageType.toLowerCase(Locale.ROOT) + "_"
+                + new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.ROOT).format(new Date());
+        
+        ZipFileUtils.compressZipFile(exportDir.getAbsolutePath(), tempZipFile.getAbsolutePath());
+        FileUtils.cleanDirectory(exportDir);
+        File zipFile = new File(exportDir, packageName + ".zip");
+        FileUtils.moveFile(tempZipFile, zipFile);
+        String exportDest = zipFile.getAbsolutePath();
+        exportDir = new File(exportDest);
     }
 }
