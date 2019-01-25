@@ -81,10 +81,10 @@ public class KylinAuthenticationProvider implements AuthenticationProvider {
         byte[] hashKey = hf.hashString(authentication.getName() + authentication.getCredentials()).asBytes();
         String userKey = Arrays.toString(hashKey);
 
-        if (userService.isEvictCacheFlag()) {
-            userCache.invalidateAll();
-            userService.setEvictCacheFlag(false);
-        }
+        // if (userService.isEvictCacheFlag()) {
+        //     userCache.invalidateAll();
+        //     userService.setEvictCacheFlag(false);
+        // }
         Authentication authed = userCache.getIfPresent(userKey);
 
         if (null != authed) {
