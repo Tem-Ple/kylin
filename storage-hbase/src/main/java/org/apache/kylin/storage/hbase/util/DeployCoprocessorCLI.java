@@ -171,7 +171,7 @@ public class DeployCoprocessorCLI {
         System.exit(0);
     }
 
-    private static List<String> filterByGitCommit(Admin hbaseAdmin, List<String> tableNames) throws IOException {
+    private static List<String> filterByGitCommit(Admin hbaseAdmin, List<String> tableNames) {
         List<String> result = Lists.newLinkedList();
         List<String> filteredList = Lists.newLinkedList();
 
@@ -181,7 +181,13 @@ public class DeployCoprocessorCLI {
         }
         logger.info("Commit Information: " + commitInfo);
         for (String tableName : tableNames) {
-            HTableDescriptor tableDesc = hbaseAdmin.getTableDescriptor(TableName.valueOf(tableName));
+            HTableDescriptor tableDesc = null;
+            try {
+                tableDesc = hbaseAdmin.getTableDescriptor(TableName.valueOf(tableName));
+            } catch (IOException e) {
+                filteredList.add(tableName);
+                continue;
+            }
             String gitTag = tableDesc.getValue(IRealizationConstants.HTableGitTag);
             if (commitInfo.equals(gitTag)) {
                 filteredList.add(tableName);
