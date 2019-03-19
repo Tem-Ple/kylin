@@ -125,6 +125,10 @@ public class MetadataCleanupJob {
         for (CubeInstance cube : cubeManager.listAllCubes()) {
             activeResources.addAll(cube.getSnapshots().values());
             for (CubeSegment segment : cube.getSegments()) {
+                if (segment.getLastBuildTime() == 0){
+                    CubeManager.getInstance(config).updateCubeDropSegments(cube, segment);
+                    logger.info("Deleting error segment: {}-{}", cube, segment);
+                }
                 activeResources.addAll(segment.getSnapshotPaths());
                 activeResources.addAll(segment.getDictionaryPaths());
                 activeResources.add(segment.getStatisticsResourcePath());
@@ -203,5 +207,4 @@ public class MetadataCleanupJob {
     private NavigableSet<String> noNull(NavigableSet<String> list) {
         return (list == null) ? new TreeSet<String>() : list;
     }
-
 }

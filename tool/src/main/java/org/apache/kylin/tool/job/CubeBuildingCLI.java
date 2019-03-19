@@ -96,7 +96,7 @@ public class CubeBuildingCLI extends AbstractApplication {
         Preconditions.checkArgument(cube != null, "Cube named " + cubeName + " does not exist!!!");
         CubeBuildTypeEnum buildTypeEnum = CubeBuildTypeEnum.valueOf(buildType);
         Preconditions.checkArgument(buildTypeEnum != null, "Build type named " + buildType + " does not exist!!!");
-        submitJob(cube, new TSRange(startDate, endDate), buildTypeEnum, false, "SYSTEM");
+        submitJob(cube, new TSRange(startDate, endDate), buildTypeEnum, true, "SYSTEM");
     }
 
     private void submitJob(CubeInstance cube, TSRange tsRange, CubeBuildTypeEnum buildType,
