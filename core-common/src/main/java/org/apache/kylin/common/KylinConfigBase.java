@@ -623,6 +623,10 @@ abstract public class KylinConfigBase implements Serializable {
         return Boolean.parseBoolean(getOptional("kylin.cube.is-automerge-enabled", TRUE));
     }
 
+    public int getDefaultVolatileRange() {
+        return Integer.parseInt(this.getOptional("kylin.cube.default-volatile-range", "0"));
+    }
+
     // ============================================================================
     // Cube Planner
     // ============================================================================

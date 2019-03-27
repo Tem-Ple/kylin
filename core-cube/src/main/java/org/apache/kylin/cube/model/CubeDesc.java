@@ -1197,7 +1197,7 @@ public class CubeDesc extends RootPersistentEntity implements IEngineAware {
     }
 
     public long getVolatileRange() {
-        return volatileRange;
+        return volatileRange == 0 ? this.config.getDefaultVolatileRange() : volatileRange;
     }
 
     public void setVolatileRange(long volatileRange) {
