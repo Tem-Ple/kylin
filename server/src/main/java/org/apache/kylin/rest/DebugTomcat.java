@@ -85,11 +85,11 @@ public class DebugTomcat {
 
     private static void overrideDevJobJarLocations() {
         KylinConfig conf = KylinConfig.getInstanceFromEnv();
-        File devJobJar = findFile("../assembly/target", "kylin-assembly-.*-SNAPSHOT-job.jar");
+        File devJobJar = findFile("../assembly/target", "kylin-assembly-.*-job.jar");
         if (devJobJar != null) {
             conf.overrideMRJobJarPath(devJobJar.getAbsolutePath());
         }
-        File devCoprocessorJar = findFile("../storage-hbase/target", "kylin-storage-hbase-.*-SNAPSHOT-coprocessor.jar");
+        File devCoprocessorJar = findFile("../storage-hbase/target", "kylin-storage-hbase-.*-coprocessor.jar");
         if (devCoprocessorJar != null) {
             conf.overrideCoprocessorLocalJar(devCoprocessorJar.getAbsolutePath());
         }
