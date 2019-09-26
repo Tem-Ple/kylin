@@ -124,6 +124,10 @@ abstract public class CachedCrudAssist<T extends RootPersistentEntity> {
         Map<String, T> entities = store.getAllResourcesMap(resRootPath, true, null, new ContentReader(serializer));
         for (Map.Entry<String,T> entitySet: entities.entrySet()) {
             String path = entitySet.getKey();
+            if (!path.endsWith(resPathSuffix)) {
+                continue;
+            }
+            
             T entity = entitySet.getValue();
             try {
                 if (entity == null) {
