@@ -409,7 +409,7 @@ public class KylinConfig extends KylinConfigBase {
     }
 
     public static void setSandboxEnvIfPossible() {
-        File dir1 = new File("/Users/zhoutianpeng/OneDrive/DXY/kylin-conf/sandbox");
+        File dir1 = new File("/home/zhoutianpeng/OneDrive/DXY/kylin-conf/sandbox");
         File dir2 = new File("../../kylin/examples/test_case_data/sandbox");
 
         if (dir1.exists()) {
