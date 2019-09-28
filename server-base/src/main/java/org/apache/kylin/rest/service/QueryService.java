@@ -378,13 +378,13 @@ public class QueryService extends BasicService {
             throw new BadRequestException(String.format(Locale.ROOT, msg.getQUERY_NOT_ALLOWED(), serverMode));
         }
         if (StringUtils.isBlank(sqlRequest.getProject())) {
-            throw new BadRequestException(msg.getEMPTY_PROJECT_NAME());
+            // throw new BadRequestException(msg.getEMPTY_PROJECT_NAME());
         }
         // project not found
         ProjectManager mgr = ProjectManager.getInstance(KylinConfig.getInstanceFromEnv());
         if (mgr.getProject(sqlRequest.getProject()) == null) {
-            throw new BadRequestException(
-                    String.format(Locale.ROOT, msg.getPROJECT_NOT_FOUND(), sqlRequest.getProject()));
+            // throw new BadRequestException(
+            //         String.format(Locale.ROOT, msg.getPROJECT_NOT_FOUND(), sqlRequest.getProject()));
         }
         if (StringUtils.isBlank(sqlRequest.getSql())) {
             throw new BadRequestException(msg.getNULL_EMPTY_SQL());
@@ -1125,9 +1125,9 @@ public class QueryService extends BasicService {
         response.setTotalScanCount(queryContext.getScannedRows());
         response.setTotalScanBytes(queryContext.getScannedBytes());
         response.setCubeSegmentStatisticsList(queryContext.getCubeSegmentStatisticsResultList());
-        if (getConfig().isQueryCacheSignatureEnabled()) {
-            response.setSignature(SQLResponseSignatureUtil.createSignature(getConfig(), response, projectName));
-        }
+        // if (getConfig().isQueryCacheSignatureEnabled()) {
+        //     response.setSignature(SQLResponseSignatureUtil.createSignature(getConfig(), response, projectName));
+        // }
         return response;
     }
 

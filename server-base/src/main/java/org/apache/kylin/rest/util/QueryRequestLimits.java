@@ -104,9 +104,9 @@ public class QueryRequestLimits implements AutoCloseable {
         
         ProjectManager mgr = ProjectManager.getInstance(KylinConfig.getInstanceFromEnv());
         ProjectInstance prj = mgr.getProject(project);
-        this.maxConcurrentQuery = prj.getConfig().getQueryConcurrentRunningThresholdForProject();
+        this.maxConcurrentQuery = 100; //prj.getConfig().getQueryConcurrentRunningThresholdForProject();
         
-        boolean ok = openQueryRequest(project, maxConcurrentQuery);
+        boolean ok = true; //openQueryRequest(project, maxConcurrentQuery);
         if (!ok) {
             Message msg = MsgPicker.getMsg();
             logger.warn("Directly return exception as too many concurrent query requests for project: {}", project);

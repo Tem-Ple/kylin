@@ -64,8 +64,16 @@ public class OLAPSchemaFactory implements SchemaFactory {
     public static File createTempOLAPJson(String project, KylinConfig config) {
 
         ProjectManager projectManager = ProjectManager.getInstance(config);
-        KylinConfig projConfig = projectManager.getProject(project).getConfig();
-        Collection<TableDesc> tables = projectManager.listExposedTables(project, exposeMore(project));
+        KylinConfig projConfig;
+        Collection<TableDesc> tables;
+        if (project == null) {
+            projConfig = projectManager.getProject("bbs").getConfig();
+            tables = projectManager.listExposedTables("bbs", false);
+            project = "bbs";
+        } else {
+            projConfig = projectManager.getProject(project).getConfig();
+            tables = projectManager.listExposedTables(project, exposeMore(project));
+        }
 
         // "database" in TableDesc correspond to our schema
         // the logic to decide which schema to be "default" in calcite:
